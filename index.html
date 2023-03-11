@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Exhumerando el pasado</title>
+        <meta charset="utf-8">  
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+        <meta http-equiv="Pragma" content="no-cache"/>
+        <meta http-equiv="expires" content="Tue, 24 Jun 2020 19:50:00 GMT" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
+        <meta property="og:site_name" content="WebGL 1"/>
+       <meta property="og:image" content="https://exhumandoelpasado.alejoforero.com/2-imagenes/2.jpg"/>
+        <link rel="image_src" href="https://exhumandoelpasado.alejoforero.com/2-imagenes/2.jpg" />
+	</head>
+
+<body onLoad="bajarScripts()">
+</body>
+
+<script>
+
+var scripts = 
+[	
+	'1-scripts/html.js?n=3',
+	'1-scripts/script.js?n=3',
+	'1-scripts/classes.js?n=3',
+	'1-scripts/p5.js?n=3'	
+]
+
+var indiceScripts = 0;
+
+function bajarScripts()
+{		
+	var script = scripts[indiceScripts];
+		
+	var req = new XMLHttpRequest();
+	req.open('GET', script);
+	req.responseType = 'blob';
+	
+	req.onload = function(event) 
+	{ 			  
+	   if (this.status === 200) 
+	   {						
+			var scriptSrc = URL.createObjectURL(this.response); 
+			
+			var scriptObj = document.createElement('script');
+			scriptObj.src = scriptSrc;
+			
+			document.getElementsByTagName('head')[0].appendChild(scriptObj);		
+			
+			indiceScripts++;
+			
+			if(indiceScripts == scripts.length)
+			{
+				correr();
+			}
+			else
+			{
+				bajarScripts();
+			}			
+	   }
+	}
+	
+	req.onerror = function() 
+	{
+	   console.log('hubo un error con un Script');
+	}
+	req.send();			
+}
+
+function correr()
+{	
+	Explorador.pc =  (esCelular.cualquiera()) ? false : true;	
+
+	if(Explorador.pc)
+	{
+		if(Explorador.browser == "Chrome")
+		{
+			bajarCss();
+		}
+		else
+		{
+			bajarCss();
+		}	
+	}
+	else
+	{
+		bajarCss();
+	}
+}
+
+function bajarCss()
+{
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', '1-scripts/estilos.css?n=3');
+	xhr.onreadystatechange = function () 
+	{
+		if (this.readyState == 4 && this.status == 200) 
+		{ 		
+			xhr.onreadystatechange = null;
+			
+			var style = document.createElement('style');
+			style.type = 'text/css';
+			style.innerHTML = this.responseText;
+			document.getElementsByTagName('head')[0].appendChild(style);
+			
+			contruirProyectoJS();
+		}
+	};
+	xhr.send();	
+};
+
+var construirPc = null;
+
+function contruirProyectoJS()
+{	
+	setTimeout(function()
+	{
+		if(construirPc)
+		{	
+			construirPc();		
+		}
+		else
+		{
+			contruirProyectoJS();
+		}
+	}, 200);
+}
+
+</script>
+
+</html>
